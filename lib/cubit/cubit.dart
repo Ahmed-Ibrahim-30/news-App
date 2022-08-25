@@ -8,9 +8,6 @@ import '../Modules/business/business_screen.dart';
 import '../Modules/science/science_Screen.dart';
 import '../component/sharedpreference.dart';
 import '../network/dio_helper.dart';
-
-
-//category=sports&country=eg
 class cubit extends Cubit<States>{
   cubit():super(initState());
   static cubit get(context)=>BlocProvider.of(context);
@@ -23,6 +20,9 @@ class cubit extends Cubit<States>{
   List<dynamic>scienceNews=[];
   List<dynamic>sportNews=[];
   List<dynamic>searchNews=[];
+
+  String url='v1/latest-news';
+  String columnName='news';
 
   List<BottomNavigationBarItem>bottoms=[
     const BottomNavigationBarItem(
@@ -68,20 +68,16 @@ class cubit extends Cubit<States>{
   void getBusinessNews(){
     emit(GetBusinessNewsLoadingState());
     DioHelper.getData(
-        url: "v1/news",
+        url: url,
         query:{
-          //keywords=tennis&countries=us,gb,de
-          'countries':['eg','us'],
-          'categories':'business',
-          'access_key':'392ea720042261e41e62c159824b031b',
+           'category':'business',
+          'apiKey':'eXTk8eKNMv_GmiufuRQLn_8VBF4UdAB8SJR_3Wm7xlrB7Ow_',
         }
     ).then((value) {
-      //print(value.data['articles'][8]['author']);
-      businessNews=value.data['data'];
-      //print("length = ${businessNews.length}");
+      businessNews=value.data[columnName];
       emit(GetBusinessNewsSuccessState());
     }).catchError((onError){
-      //print(onError.toString());
+      print(onError.toString());
       emit(GetBusinessNewsErrorState());
     }
     );
@@ -89,17 +85,15 @@ class cubit extends Cubit<States>{
   void getScienceNews(){
     emit(GetScienceNewsLoadingState());
     DioHelper.getData(
-        url: "v1/news",
+        url: url,
         query:{
-          'languages':'ar',
-          'access_key':'392ea720042261e41e62c159824b031b',
+          'category':'science',
+          'apiKey':'eXTk8eKNMv_GmiufuRQLn_8VBF4UdAB8SJR_3Wm7xlrB7Ow_',
         }
     ).then((value) {
-      //print(value.data['articles'][8]['author']);
-      scienceNews=value.data['data'];
+      scienceNews=value.data[columnName];
       emit(GetScienceNewsSuccessState());
     }).catchError((onError){
-      //print(onError.toString());
       emit(GetScienceNewsErrorState());
     }
     );
@@ -107,16 +101,14 @@ class cubit extends Cubit<States>{
   void getSportNews(){
     emit(GetSportNewsLoadingState());
     DioHelper.getData(
-        url: "v1/news",
+        url: url,
         query:{
-          'languages':'en',
-          //'countries':'us',
-          'categories':'sports',
-          'access_key':'392ea720042261e41e62c159824b031b',
+          'category':'sports',
+          'apiKey':'eXTk8eKNMv_GmiufuRQLn_8VBF4UdAB8SJR_3Wm7xlrB7Ow_',
         }
     ).then((value) {
       //print(value.data['articles'][8]['author']);
-      sportNews=value.data['data'];
+      sportNews=value.data[columnName];
       emit(GetSportNewsSuccessState());
     }).catchError((onError){
       //print(onError.toString());
@@ -127,14 +119,14 @@ class cubit extends Cubit<States>{
   void getSearchNews(String value){
     emit(GetSearchNewsLoadingState());
     DioHelper.getData(
-        url: "v1/news",
+        url: 'v1/search',
         query:{
           'keywords':value,
-          'access_key':'392ea720042261e41e62c159824b031b',
+          'apiKey':'eXTk8eKNMv_GmiufuRQLn_8VBF4UdAB8SJR_3Wm7xlrB7Ow_',
         }
     ).then((value) {
-      print(searchNews.length);
-      searchNews=value.data['data'];
+      //print(searchNews.length);
+      searchNews=value.data[columnName];
       emit(GetSearchNewsSuccessState());
     }).catchError((onError){
       //print(onError.toString());

@@ -15,7 +15,7 @@ class DioHelper{
   static init(){
     dio=Dio(
         BaseOptions(
-          baseUrl: 'http://api.mediastack.com/',
+          baseUrl: 'https://api.currentsapi.services/',
           receiveDataWhenStatusError: true
         )
     );
